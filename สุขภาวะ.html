@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>สุขภาวะดี (Sukkhaphap Dee) - คู่มือดูแลสุขภาพและโภชนาการสำหรับประชาชน</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Prompt & Sarabun สำหรับภาษาไทยที่อ่านง่าย ทันสมัย -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tone.js สำหรับเสียงประกอบเบาๆ ในวิดีโอสาธิตอินเทอร์แอคทีฟ (ไม่ต้องพึ่งไฟล์ภายนอก) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'Sarabun', 'sans-serif'],
+                        body: ['Sarabun', 'sans-serif'],
+                    },
+                    colors: {
+                        mint: {
+                            50: '#f0fdf9',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        },
+                        skysoft: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* สไตล์เสริมสำหรับอนิเมชันที่ลื่นไหล */
+        body {
+            background: linear-gradient(135deg, #f0fdf9 0%, #e0f2fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* Modal Transitions */
+        .modal-backdrop {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-out;
+        }
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            transform: scale(0.95) translateY(15px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-backdrop.active .modal-content {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Tab Transition */
+        .tab-pane {
+            display: none;
+            animation: fadeInSlide 0.35s ease-out forwards;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0fdf9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #99f6e4;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5eead4;
+        }
+
+        /* Safe area padding for iOS/Android mobile bottom bar */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 0.5rem);
+        }
+    </style>
+</head>
+<body class="text-slate-700 antialiased selection:bg-mint-200 selection:text-mint-700">
+
+    <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+    <!-- ==================== 1. LOGIN PAGE (หน้าเข้าสู่ระบบ) ==================== -->
+    <section id="login-view" class="min-h-screen flex items-center justify-center p-4 sm:p-6">
+        <div class="glass-card w-full max-w-md rounded-3xl shadow-xl shadow-teal-900/5 p-6 sm:p-8 relative overflow-hidden">
+            <!-- Decorative blobs -->
+            <div class="absolute -top-16 -right-16 w-40 h-40 bg-mint-200/50 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-16 -left-16 w-40 h-40 bg-skysoft-200/50 rounded-full blur-2xl pointer-events-none"></div>
+
+            <!-- Header Logo -->
+            <div class="text-center mb-7 relative z-10">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-mint-500 to-skysoft-500 text-white shadow-lg shadow-mint-500/30 mb-4">
+                    <i class="fa-solid fa-heart-pulse text-3xl"></i>
+                </div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">สุขภาวะดี</h1>
+                <p class="text-sm text-slate-500 mt-1">ศูนย์รวมความรู้ดูแลสุขภาพและโภชนาการเพื่อประชาชน</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-4 relative z-10" novalidate>
+                <div>
+                    <label for="username" class="block text-sm font-medium text-slate-700 mb-1.5">ชื่อผู้ใช้งาน หรือ อีเมล</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                            <i class="fa-regular fa-user"></i>
+                        </span>
+                        <input type="text" id="username" name="username" required
+                            placeholder="กรอกชื่อผู้ใช้งานของคุณ..."
+                            class="w-full min-h-[48px] pl-10 pr-4 py-3 bg-white/80 border border-slate-200 rounded-2xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-mint-400 focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-700 mb-1.5">รหัสผ่าน</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input type="password" id="password" name="password" required
+                            placeholder="กรอกรหัสผ่าน..."
+                            class="w-full min-h-[48px] pl-10 pr-12 py-3 bg-white/80 border border-slate-200 rounded-2xl text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-mint-400 focus:border-transparent transition">
+                        <button type="button" id="toggle-password" aria-label="แสดงหรือซ่อนรหัสผ่าน"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center justify-center min-w-[44px] text-slate-400 hover:text-mint-600 transition">
+                            <i class="fa-regular fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember Me Checkbox -->
+                <div class="flex items-center justify-between pt-1">
+                    <label class="inline-flex items-center min-h-[44px] cursor-pointer select-none group">
+                        <input type="checkbox" id="remember-me" class="w-5 h-5 rounded border-slate-300 text-mint-600 focus:ring-mint-400 cursor-pointer">
+                        <span class="ml-2.5 text-sm text-slate-600 group-hover:text-slate-800 transition">จดจำรหัสผ่านของฉัน (Remember Me)</span>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="w-full min-h-[48px] py-3.5 px-4 bg-gradient-to-r from-mint-500 to-skysoft-500 hover:from-mint-600 hover:to-skysoft-600 text-white font-semibold rounded-2xl shadow-md shadow-mint-500/25 transform active:scale-[0.99] transition flex items-center justify-center gap-2">
+                    <span>เข้าสู่ระบบ</span>
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-slate-200"></div>
+                </div>
+                <div class="relative flex justify-center text-xs">
+                    <span class="px-3 bg-white/90 text-slate-400 rounded-full">หรือเข้าใช้งานแบบรวดเร็ว</span>
+                </div>
+            </div>
+
+            <!-- Demo Account Button -->
+            <button type="button" id="demo-login-btn"
+                class="w-full min-h-[48px] py-3 px-4 bg-mint-50 hover:bg-mint-100 text-mint-700 border border-mint-200 font-medium rounded-2xl transition flex items-center justify-center gap-2 text-sm">
+                <i class="fa-solid fa-bolt text-amber-500"></i>
+                <span>ทดลองเข้าสู่ระบบด่วน (บัญชีประชาชนทั่วไป)</span>
+            </button>
+
+            <p class="text-center text-xs text-slate-400 mt-5">
+                * สามารถพิมพ์ชื่อและรหัสผ่านใดก็ได้เพื่อเริ่มต้นใช้งานทันที
+            </p>
+        </div>
+    </section>
+
+    <!-- ==================== 2. HEALTH DASHBOARD (หน้าหลักหลังเข้าสู่ระบบ) ==================== -->
+    <div id="dashboard-view" class="hidden min-h-screen flex flex-col pb-20 sm:pb-0">
+        
+        <!-- Top Navigation Bar -->
+        <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-mint-100 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Brand -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-mint-500 to-skysoft-500 flex items-center justify-center text-white shadow-sm shrink-0">
+                            <i class="fa-solid fa-heart-pulse text-xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-lg text-slate-800 block leading-none">สุขภาวะดี</span>
+                            <span class="text-[11px] text-mint-600 font-medium">รองรับมือถือ แท็บเล็ต และคอมพิวเตอร์</span>
+                        </div>
+                    </div>
+
+                    <!-- User Profile & Logout -->
+                    <div class="flex items-center gap-2.5 sm:gap-3">
+                        <div class="hidden sm:flex items-center gap-2.5 bg-mint-50/80 border border-mint-200/70 px-3.5 py-1.5 rounded-full">
+                            <div class="w-7 h-7 rounded-full bg-mint-500 text-white flex items-center justify-center text-xs font-bold">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <span class="text-sm font-medium text-slate-700">สวัสดี, <strong id="display-username" class="text-mint-700">ผู้ใช้งาน</strong></span>
+                        </div>
+                        <button id="logout-btn"
+                            class="min-h-[44px] px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-sm font-medium transition flex items-center gap-2 border border-rose-200/60">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>ออกจากระบบ</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Welcome Banner & Navigation Tabs -->
+        <div class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 sm:pt-6 pb-8 sm:pb-12 flex-1">
+            
+            <!-- Mobile Greeting -->
+            <div class="sm:hidden mb-4 bg-white/90 rounded-2xl p-3.5 border border-mint-100 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-mint-500 text-white flex items-center justify-center text-xs shrink-0">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span class="text-sm text-slate-700">สวัสดีคุณ <strong id="display-username-mobile" class="text-mint-700">ผู้ใช้งาน</strong></span>
+                </div>
+                <span class="text-xs bg-mint-100 text-mint-700 px-2.5 py-1 rounded-full font-medium">ออนไลน์</span>
+            </div>
+
+            <!-- Tablet & Desktop Navigation Tabs (ซ่อนบนมือถือเพราะใช้แถบเมนูล่างแทน) -->
+            <nav aria-label="เมนูหลักสำหรับแท็บเล็ตและคอมพิวเตอร์" class="hidden sm:block bg-white/90 p-2 rounded-2xl shadow-sm border border-mint-100 mb-6">
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-2">
+                    <button data-tab="tab-selfcare" class="nav-tab-btn active min-h-[48px] flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all bg-gradient-to-r from-mint-500 to-skysoft-500 text-white shadow-md shadow-mint-500/20">
+                        <i class="fa-solid fa-book-medical text-base"></i>
+                        <span>1. คู่มือดูแลสุขภาพ</span>
+                    </button>
+                    <button data-tab="tab-foodgroups" class="nav-tab-btn min-h-[48px] flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-mint-50 transition-all">
+                        <i class="fa-solid fa-bowl-food text-base text-mint-600"></i>
+                        <span>2. อาหารหลัก 5 หมู่</span>
+                    </button>
+                    <button data-tab="tab-videos" class="nav-tab-btn min-h-[48px] flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-mint-50 transition-all">
+                        <i class="fa-solid fa-circle-play text-base text-skysoft-600"></i>
+                        <span>3. คลังวิดีโอแนะนำ</span>
+                    </button>
+                    <button data-tab="tab-calculator" class="nav-tab-btn min-h-[48px] flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-mint-50 transition-all">
+                        <i class="fa-solid fa-calculator text-base text-teal-600"></i>
+                        <span>4. ประเมินสุขภาพ</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- ==================== TAB 1: คู่มือการดูแลสุขภาพตัวเอง (SELF-CARE GUIDE) ==================== -->
+            <div id="tab-selfcare" class="tab-pane active">
+                <div class="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <div>
+                        <span class="inline-block px-3 py-1 rounded-full bg-mint-100 text-mint-700 text-xs font-semibold mb-2">หมวดหมู่ความรู้พื้นฐาน</span>
+                        <h2 class="text-2xl font-bold text-slate-800">คู่มือการดูแลสุขภาพตัวเอง (Self-Care Guide)</h2>
+                        <p class="text-slate-500 text-sm mt-1">คลิกที่การ์ดแต่ละหัวข้อเพื่อเปิดหน้าต่างอ่านคู่มือปฏิบัติตัวแบบเจาะลึก</p>
+                    </div>
+                    <!-- Quick Filter -->
+                    <div class="flex flex-wrap gap-2" id="selfcare-filters">
+                        <button data-filter="all" class="filter-chip active min-h-[40px] px-4 py-2 rounded-full text-xs font-medium bg-mint-600 text-white transition">ทั้งหมด</button>
+                        <button data-filter="body" class="filter-chip min-h-[40px] px-4 py-2 rounded-full text-xs font-medium bg-white text-slate-600 hover:bg-mint-50 border border-slate-200 transition">ร่างกาย & การเคลื่อนไหว</button>
+                        <button data-filter="mind" class="filter-chip min-h-[40px] px-4 py-2 rounded-full text-xs font-medium bg-white text-slate-600 hover:bg-mint-50 border border-slate-200 transition">จิตใจ & การพักผ่อน</button>
+                    </div>
+                </div>
+
+                <!-- Self-Care Cards Grid -->
+                <div id="selfcare-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                    <!-- Cards will be dynamically rendered by JS -->
+                </div>
+            </div>
+
+            <!-- ==================== TAB 2: หลักการรับประทานอาหารครบ 5 หมู่ (5 FOOD GROUPS) ==================== -->
+            <div id="tab-foodgroups" class="tab-pane">
+                <!-- Banner หลัก 2:1:1 -->
+                <div class="glass-card rounded-3xl p-6 sm:p-8 mb-8 border border-mint-200/80 shadow-sm relative overflow-hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        <div class="lg:col-span-7">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-skysoft-100 text-skysoft-700 text-xs font-semibold mb-3">
+                                <i class="fa-solid fa-utensils"></i> โภชนาการสมดุลสำหรับคนไทย
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-3">หลักการรับประทานอาหารครบ 5 หมู่ & สูตรจานสุขภาพ 2:1:1</h2>
+                            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-4 font-body">
+                                การรับประทานอาหารให้ครบทั้ง 5 หมู่ในสัดส่วนที่เหมาะสม ช่วยเสริมสร้างภูมิคุ้มกัน ซ่อมแซมส่วนที่สึกหรอ และลดความเสี่ยงโรคไม่ติดต่อเรื้อรัง (NCDs) เช่น เบาหวาน ความดันโลหิตสูง โดยแนะนำให้แบ่งสัดส่วนใน 1 จาน (เส้นผ่านศูนย์กลาง 9 นิ้ว) ดังนี้:
+                            </p>
+                            <div class="grid grid-cols-3 gap-3 text-center">
+                                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3">
+                                    <div class="text-2xl font-bold text-emerald-600">2 ส่วน</div>
+                                    <div class="text-xs font-semibold text-slate-700 mt-0.5">ผักใบและผักหลากสี</div>
+                                    <div class="text-[11px] text-slate-500">(50% ของจาน)</div>
+                                </div>
+                                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3">
+                                    <div class="text-2xl font-bold text-amber-600">1 ส่วน</div>
+                                    <div class="text-xs font-semibold text-slate-700 mt-0.5">ข้าว/แป้งไม่ขัดสี</div>
+                                    <div class="text-[11px] text-slate-500">(25% ของจาน)</div>
+                                </div>
+                                <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3">
+                                    <div class="text-2xl font-bold text-rose-600">1 ส่วน</div>
+                                    <div class="text-xs font-semibold text-slate-700 mt-0.5">เนื้อสัตว์ไขมันต่ำ/ถั่ว</div>
+                                    <div class="text-[11px] text-slate-500">(25% ของจาน)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Visual Plate SVG -->
+                        <div class="lg:col-span-5 flex flex-col items-center justify-center">
+                            <div class="relative w-56 h-56 sm:w-64 sm:h-64">
+                                <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md">
+                                    <!-- Outer Plate Rim -->
+                                    <circle cx="100" cy="100" r="95" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                                    <circle cx="100" cy="100" r="82" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+                                    <!-- Left Half: 2 Parts Vegetables (Green) -->
+                                    <path d="M 100 18 A 82 82 0 0 0 100 182 Z" fill="#a7f3d0" opacity="0.85"/>
+                                    <!-- Top Right Quarter: 1 Part Carbs (Amber) -->
+                                    <path d="M 100 18 A 82 82 0 0 1 182 100 L 100 100 Z" fill="#fde68a" opacity="0.85"/>
+                                    <!-- Bottom Right Quarter: 1 Part Protein (Rose) -->
+                                    <path d="M 182 100 A 82 82 0 0 1 100 182 L 100 100 Z" fill="#fecdd3" opacity="0.85"/>
+                                    <!-- Divider Lines -->
+                                    <line x1="100" y1="18" x2="100" y2="182" stroke="#ffffff" stroke-width="3"/>
+                                    <line x1="100" y1="100" x2="182" y2="100" stroke="#ffffff" stroke-width="3"/>
+                                    <!-- Labels -->
+                                    <text x="60" y="95" text-anchor="middle" fill="#065f46" font-size="13" font-weight="bold">ผัก 2 ส่วน</text>
+                                    <text x="60" y="112" text-anchor="middle" fill="#047857" font-size="10">วิตามิน/เกลือแร่</text>
+                                    
+                                    <text x="138" y="65" text-anchor="middle" fill="#92400e" font-size="11" font-weight="bold">ข้าว 1 ส่วน</text>
+                                    <text x="138" y="79" text-anchor="middle" fill="#b45309" font-size="9">คาร์โบไฮเดรต</text>
+                                    
+                                    <text x="138" y="135" text-anchor="middle" fill="#9f1239" font-size="11" font-weight="bold">เนื้อสัตว์ 1 ส่วน</text>
+                                    <text x="138" y="149" text-anchor="middle" fill="#be123c" font-size="9">โปรตีน</text>
+                                </svg>
+                            </div>
+                            <span class="text-xs text-slate-500 mt-2">แผนภาพสัดส่วนจานอาหารสุขภาพ 2:1:1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5 Food Groups Cards -->
+                <h3 class="text-lg sm:text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-mint-600"></i>
+                    <span>รายละเอียดอาหารหลักทั้ง 5 หมู่ (คลิกเพื่อดูข้อมูลเจาะลึก)</span>
+                </h3>
+                <div id="foodgroups-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                    <!-- Rendered dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- ==================== TAB 3: คลังวิดีโอแนะนำสุขภาพ (HEALTH VIDEO GUIDES) ==================== -->
+            <div id="tab-videos" class="tab-pane">
+                <div class="mb-5 sm:mb-6">
+                    <span class="inline-block px-3 py-1 rounded-full bg-skysoft-100 text-skysoft-700 text-xs font-semibold mb-2">สื่อมัลติมีเดียเพื่อการเรียนรู้</span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-800">คลังวิดีโอสาธิตและแนะนำการดูแลสุขภาพ (เสียงพากย์ภาษาไทยชัดถ้อยชัดคำ)</h2>
+                    <p class="text-slate-500 text-sm mt-1">รับชมคลิปสาธิตพร้อมเสียงคนพากย์ภาษาไทยที่อ่านแบ่งทีละประโยคอย่างช้าๆ ชัดเจน และเลือกเสียงพากย์ในเครื่องได้</p>
+                </div>
+
+                <!-- Main Interactive Video Player Stage -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Video Screen & Controls (8 cols on desktop) -->
+                    <div class="lg:col-span-8">
+                        <div class="bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-slate-800">
+                            <!-- Canvas Screen -->
+                            <div class="relative aspect-video w-full bg-slate-950 flex items-center justify-center overflow-hidden">
+                                <canvas id="health-video-canvas" class="w-full h-full block"></canvas>
+                                
+                                <!-- Thai Voice Status Badge (มุมซ้ายบนของจอวิดีโอ) -->
+                                <div id="voice-status-badge" class="absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-slate-900/85 backdrop-blur-sm text-mint-300 px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-medium border border-mint-500/30 flex items-center gap-2 max-w-[85%]">
+                                    <i class="fa-solid fa-microphone-lines text-mint-400 shrink-0" id="voice-wave-icon"></i>
+                                    <span id="voice-status-label" class="truncate">พร้อมบรรยายเสียงภาษาไทย (ชัดถ้อยชัดคำ)</span>
+                                </div>
+
+                                <!-- Subtitle Overlay -->
+                                <div id="video-subtitle-box" class="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-4 sm:left-4 sm:right-4 bg-slate-900/90 backdrop-blur-md text-white px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-2xl text-center border border-white/15 transition-opacity shadow-lg">
+                                    <p id="video-subtitle-text" class="text-xs sm:text-base md:text-lg font-medium text-mint-200 leading-relaxed">กดปุ่ม "เล่นวิดีโอ" ด้านล่างเพื่อเริ่มต้นรับชมพร้อมเสียงพากย์ภาษาไทย</p>
+                                </div>
+
+                                <!-- Center Play Overlay Button (when paused) -->
+                                <button id="center-play-btn" aria-label="เล่นวิดีโอ" class="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-mint-500/90 hover:bg-mint-500 text-white flex items-center justify-center shadow-lg shadow-mint-500/40 transition transform hover:scale-105">
+                                    <i class="fa-solid fa-play text-2xl sm:text-3xl ml-1"></i>
+                                </button>
+                            </div>
+
+                            <!-- Custom Responsive Player Controls -->
+                            <div class="bg-slate-900 p-3.5 sm:p-4 text-white space-y-3">
+                                <!-- Progress Bar -->
+                                <div class="w-full bg-slate-700 h-2.5 rounded-full cursor-pointer overflow-hidden" id="video-progress-container">
+                                    <div id="video-progress-bar" class="bg-gradient-to-r from-mint-400 to-skysoft-400 h-full w-0 transition-all duration-150"></div>
+                                </div>
+
+                                <!-- Primary Playback Row -->
+                                <div class="flex flex-wrap items-center justify-between gap-2.5">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <button id="video-play-pause-btn" class="min-h-[44px] px-4 py-2 rounded-xl bg-mint-500 hover:bg-mint-600 text-white font-semibold text-sm flex items-center gap-2 transition">
+                                            <i class="fa-solid fa-play" id="play-pause-icon"></i>
+                                            <span id="play-pause-label">เล่นวิดีโอ</span>
+                                        </button>
+                                        <button id="video-restart-btn" class="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center justify-center" title="เริ่มเล่นใหม่">
+                                            <i class="fa-solid fa-rotate-left"></i>
+                                        </button>
+                                        <button id="video-mute-btn" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium transition flex items-center gap-1.5" title="เปิด/ปิดเสียงพากย์ภาษาไทย">
+                                            <i class="fa-solid fa-volume-high text-mint-400" id="mute-icon"></i>
+                                            <span id="mute-label">เสียง: เปิด</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="flex items-center gap-2.5 text-xs text-slate-400 ml-auto">
+                                        <span id="video-time-display" class="font-mono text-slate-200 text-xs sm:text-sm">00:00 / 00:50</span>
+                                        <span class="px-2.5 py-1 rounded-md bg-slate-800 text-mint-400 font-semibold">TH ชัดเจน</span>
+                                    </div>
+                                </div>
+
+                                <!-- Narrator Voice & Pacing Customization Bar -->
+                                <div class="pt-2.5 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                                    <div class="flex flex-wrap items-center gap-2 flex-1">
+                                        <!-- Speed Selector -->
+                                        <div class="flex items-center gap-1.5 bg-slate-800 min-h-[42px] px-3 py-1.5 rounded-xl border border-slate-700 flex-1 sm:flex-initial">
+                                            <i class="fa-solid fa-gauge-high text-skysoft-400 text-xs shrink-0"></i>
+                                            <select id="voice-rate-select" aria-label="ปรับความเร็วเสียงพากย์" class="bg-transparent text-xs text-slate-200 font-medium focus:outline-none cursor-pointer w-full">
+                                                <option value="0.68" class="bg-slate-800 text-white">พูดช้ามาก (ทีละคำ)</option>
+                                                <option value="0.82" selected class="bg-slate-800 text-white">พูดช้าชัดเจน (แนะนำ)</option>
+                                                <option value="0.95" class="bg-slate-800 text-white">จังหวะปกติ</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Thai Narrator Voice Selector -->
+                                        <div class="flex items-center gap-1.5 bg-slate-800 min-h-[42px] px-3 py-1.5 rounded-xl border border-slate-700 flex-1 sm:flex-initial max-w-full sm:max-w-[230px]">
+                                            <i class="fa-solid fa-user-tie text-mint-400 text-xs shrink-0"></i>
+                                            <select id="thai-voice-select" aria-label="เลือกเสียงคนพากย์ภาษาไทย" class="bg-transparent text-xs text-slate-200 font-medium focus:outline-none cursor-pointer truncate w-full">
+                                                <option value="auto" class="bg-slate-800 text-white">คนพากย์: อัตโนมัติ (ชัดที่สุด)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Test Voice Button -->
+                                    <button type="button" id="test-voice-btn" class="min-h-[42px] px-3.5 py-1.5 rounded-xl bg-skysoft-600/30 hover:bg-skysoft-600/50 text-skysoft-300 border border-skysoft-500/40 text-xs font-medium transition flex items-center justify-center gap-1.5 shrink-0">
+                                        <i class="fa-solid fa-ear-listen"></i>
+                                        <span>ทดสอบเสียงคนพากย์</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Video Description -->
+                        <div class="glass-card rounded-3xl p-5 mt-4 border border-mint-100">
+                            <div class="flex items-start justify-between gap-4">
+                                <div>
+                                    <span id="current-video-badge" class="inline-block px-2.5 py-0.5 rounded-full bg-mint-100 text-mint-700 text-xs font-semibold mb-1.5">หมวดการออกกำลังกาย</span>
+                                    <h3 id="current-video-title" class="text-lg sm:text-xl font-bold text-slate-800">ท่าบริหารยืดเหยียดคลายกล้ามเนื้อออฟฟิศซินโดรม</h3>
+                                    <p id="current-video-desc" class="text-sm text-slate-600 mt-1.5 font-body leading-relaxed">ฝึกยืดกล้ามเนื้อคอ บ่า ไหล่ และฝึกจังหวะการหายใจเข้า-ออกอย่างถูกวิธี ช่วยลดอาการปวดเมื่อยจากการทำงานหน้าจอ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Playlist Sidebar (4 cols on desktop, 2 cols on tablet) -->
+                    <div class="lg:col-span-4 flex flex-col gap-3">
+                        <h3 class="font-bold text-slate-800 px-1 flex items-center gap-2">
+                            <i class="fa-solid fa-list-ul text-mint-600"></i>
+                            <span>รายการวิดีโอแนะนำ (เลือกชม)</span>
+                        </h3>
+                        <div id="video-playlist" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
+                            <!-- Playlist items rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== TAB 4: เครื่องมือประเมินสุขภาพเบื้องต้น (HEALTH TOOLS) ==================== -->
+            <div id="tab-calculator" class="tab-pane">
+                <div class="mb-6">
+                    <span class="inline-block px-3 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-semibold mb-2">เครื่องมือช่วยคำนวณส่วนบุคคล</span>
+                    <h2 class="text-2xl font-bold text-slate-800">ประเมินดัชนีมวลกาย (BMI) และปริมาณน้ำที่ควรดื่มต่อวัน</h2>
+                    <p class="text-slate-500 text-sm mt-1">กรอกข้อมูลพื้นฐานของคุณเพื่อรับคำแนะนำด้านสุขภาพที่เหมาะสมเฉพาะบุคคล</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- BMI Calculator Card -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 border border-mint-200/80 shadow-sm">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-12 h-12 rounded-2xl bg-mint-100 text-mint-600 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-weight-scale"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">คำนวณดัชนีมวลกาย (BMI)</h3>
+                                <p class="text-xs text-slate-500">เกณฑ์มาตรฐานสำหรับคนเอเชียและคนไทย</p>
+                            </div>
+                        </div>
+
+                        <form id="bmi-form" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="bmi-weight" class="block text-sm font-medium text-slate-700 mb-1">น้ำหนัก (กิโลกรัม)</label>
+                                    <input type="number" id="bmi-weight" step="0.1" min="20" max="300" required placeholder="เช่น 60"
+                                        class="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:ring-2 focus:ring-mint-400 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label for="bmi-height" class="block text-sm font-medium text-slate-700 mb-1">ส่วนสูง (เซนติเมตร)</label>
+                                    <input type="number" id="bmi-height" step="0.1" min="100" max="250" required placeholder="เช่น 165"
+                                        class="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:ring-2 focus:ring-mint-400 focus:outline-none">
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full min-h-[48px] py-3 bg-mint-600 hover:bg-mint-700 text-white font-semibold rounded-2xl shadow-sm transition">
+                                คำนวณค่า BMI ของฉัน
+                            </button>
+                        </form>
+
+                        <!-- BMI Result Box -->
+                        <div id="bmi-result-box" class="hidden mt-6 p-5 rounded-2xl bg-slate-50 border border-slate-200 transition-all">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm text-slate-500">ค่า BMI ของคุณคือ</span>
+                                <span id="bmi-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-mint-100 text-mint-700">สมส่วน</span>
+                            </div>
+                            <div id="bmi-value" class="text-3xl font-bold text-slate-800 mb-2">22.04</div>
+                            <p id="bmi-advice" class="text-sm text-slate-600 font-body leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <!-- Daily Water Intake Calculator Card -->
+                    <div class="glass-card rounded-3xl p-6 sm:p-8 border border-skysoft-200/80 shadow-sm">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-12 h-12 rounded-2xl bg-skysoft-100 text-skysoft-600 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-glass-water"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">คำนวณปริมาณน้ำดื่มที่ควรได้รับต่อวัน</h3>
+                                <p class="text-xs text-slate-500">คำนวณตามน้ำหนักตัวและระดับกิจกรรม</p>
+                            </div>
+                        </div>
+
+                        <form id="water-form" class="space-y-4">
+                            <div>
+                                <label for="water-weight" class="block text-sm font-medium text-slate-700 mb-1">น้ำหนักตัวปัจจุบัน (กิโลกรัม)</label>
+                                <input type="number" id="water-weight" step="0.1" min="20" max="300" required placeholder="เช่น 60"
+                                    class="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:ring-2 focus:ring-skysoft-400 focus:outline-none">
+                            </div>
+                            <div>
+                                <label for="water-activity" class="block text-sm font-medium text-slate-700 mb-1">ระดับการออกกำลังกายต่อวัน</label>
+                                <select id="water-activity" class="w-full min-h-[48px] px-4 py-3 rounded-2xl bg-white border border-slate-200 text-base sm:text-sm focus:ring-2 focus:ring-skysoft-400 focus:outline-none">
+                                    <option value="0">ทำงานทั่วไป / ไม่ได้ออกกำลังกาย</option>
+                                    <option value="350">ออกกำลังกายเบาๆ (30 นาที)</option>
+                                    <option value="700">ออกกำลังกายปานกลาง-หนัก (60 นาทีขึ้นไป)</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="w-full min-h-[48px] py-3 bg-skysoft-600 hover:bg-skysoft-700 text-white font-semibold rounded-2xl shadow-sm transition">
+                                คำนวณปริมาณน้ำดื่ม
+                            </button>
+                        </form>
+
+                        <!-- Water Result Box -->
+                        <div id="water-result-box" class="hidden mt-6 p-5 rounded-2xl bg-skysoft-50/70 border border-skysoft-200">
+                            <div class="text-sm text-slate-600 mb-1">ปริมาณน้ำสะอาดที่ร่างกายต้องการต่อวัน:</div>
+                            <div class="flex items-baseline gap-2 mb-2">
+                                <span id="water-liters" class="text-3xl font-bold text-skysoft-700">2.0 ลิตร</span>
+                                <span id="water-glasses" class="text-sm font-medium text-skysoft-600">(ประมาณ 8 แก้ว)</span>
+                            </div>
+                            <p class="text-xs text-slate-600 font-body">
+                                * คำแนะนำ: ควรจิบน้ำทีละน้อยตลอดทั้งวัน ไม่ควรดื่มรวดเดียวปริมาณมากๆ และดื่มน้ำเปล่า 1 แก้วทันทีหลังตื่นนอน
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="bg-white/70 border-t border-mint-100 py-5 text-center text-xs text-slate-500">
+            <div class="max-w-7xl mx-auto px-4">
+                <p>© 2026 โครงการส่งเสริมสุขภาวะดีเพื่อประชาชน (Sukkhaphap Dee Health Portal) — ใช้งานได้ทุกอุปกรณ์ มือถือ แท็บเล็ต แล็ปท็อป และคอมพิวเตอร์</p>
+            </div>
+        </footer>
+
+        <!-- Mobile Bottom Navigation Bar (แสดงเฉพาะบนหน้าจอมือถือ < 640px เพื่อการกดด้วยมือเดียวที่สะดวก) -->
+        <nav aria-label="เมนูหลักสำหรับมือถือ" class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-mint-200/80 shadow-[0_-4px_16px_rgba(15,118,110,0.08)] pb-safe">
+            <div class="grid grid-cols-4 gap-1 px-1.5 py-1.5">
+                <button data-tab="tab-selfcare" class="mobile-tab-btn active min-h-[52px] flex flex-col items-center justify-center rounded-xl text-mint-700 bg-mint-50 font-semibold transition">
+                    <i class="fa-solid fa-book-medical text-base mb-0.5"></i>
+                    <span class="text-[11px] leading-tight">ดูแลสุขภาพ</span>
+                </button>
+                <button data-tab="tab-foodgroups" class="mobile-tab-btn min-h-[52px] flex flex-col items-center justify-center rounded-xl text-slate-500 hover:text-mint-600 font-medium transition">
+                    <i class="fa-solid fa-bowl-food text-base mb-0.5"></i>
+                    <span class="text-[11px] leading-tight">อาหาร 5 หมู่</span>
+                </button>
+                <button data-tab="tab-videos" class="mobile-tab-btn min-h-[52px] flex flex-col items-center justify-center rounded-xl text-slate-500 hover:text-skysoft-600 font-medium transition">
+                    <i class="fa-solid fa-circle-play text-base mb-0.5"></i>
+                    <span class="text-[11px] leading-tight">คลิปวิดีโอ</span>
+                </button>
+                <button data-tab="tab-calculator" class="mobile-tab-btn min-h-[52px] flex flex-col items-center justify-center rounded-xl text-slate-500 hover:text-teal-600 font-medium transition">
+                    <i class="fa-solid fa-calculator text-base mb-0.5"></i>
+                    <span class="text-[11px] leading-tight">ประเมินสุขภาพ</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- ==================== MODAL POPUP WINDOW (หน้าต่างย่อยอ่านรายละเอียดเจาะลึก) ==================== -->
+    <div id="detail-modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm" role="dialog" aria-modal="true">
+        <div class="modal-content bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden border border-mint-100 flex flex-col max-h-[90vh]">
+            <!-- Modal Header -->
+            <div id="modal-header-bg" class="px-6 py-5 bg-gradient-to-r from-mint-500 to-skysoft-500 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon-box" class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <span id="modal-category" class="text-xs uppercase tracking-wider text-white/85 block">หมวดหมู่สุขภาพ</span>
+                        <h3 id="modal-title" class="text-lg sm:text-xl font-bold leading-snug">หัวข้อรายละเอียด</h3>
+                    </div>
+                </div>
+                <button id="close-modal-btn" aria-label="ปิดหน้าต่าง" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Scrollable) -->
+            <div class="p-6 overflow-y-auto space-y-5 font-body text-slate-700" id="modal-body-content">
+                <!-- Dynamic Content Injected Here -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+                <button id="modal-done-btn" class="px-5 py-2.5 rounded-xl bg-mint-600 hover:bg-mint-700 text-white text-sm font-medium transition">
+                    เข้าใจแล้ว / ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        /**
+         * ข้อมูลหลักของแอปพลิเคชัน (คู่มือดูแลสุขภาพ, อาหาร 5 หมู่, วิดีโอสาธิต)
+         */
+        const selfCareData = [
+            {
+                id: 'exercise',
+                category: 'body',
+                tag: 'การออกกำลังกาย',
+                title: 'ขยับกายวันละนิด พิชิตโรคเรื้อรัง',
+                summary: 'แนวทางการออกกำลังกายที่เหมาะสมสำหรับทุกช่วงวัย อย่างน้อย 150 นาทีต่อสัปดาห์',
+                icon: 'fa-person-running',
+                colorClass: 'from-emerald-400 to-teal-500',
+                badgeBg: 'bg-emerald-100 text-emerald-700',
+                details: {
+                    intro: 'การออกกำลังกายอย่างสม่ำเสมอช่วยให้หัวใจแข็งแรง กระตุ้นการไหลเวียนโลหิต ควบคุมน้ำหนัก และหลั่งสารเอ็นดอร์ฟินที่ช่วยลดความเครียด',
+                    steps: [
+                        'ออกกำลังกายแบบแอโรบิก (เดินเร็ว, วิ่งเหยาะ, ปั่นจักรยาน, ว่ายน้ำ) อย่างน้อย 30 นาทีต่อวัน 5 วันต่อสัปดาห์',
+                        'ฝึกความแข็งแรงของกล้ามเนื้อ (เวทเทรนนิ่ง หรือบอดี้เวท เช่น ลุกนั่ง ดันพื้น) สัปดาห์ละ 2 วัน',
+                        'ยืดเหยียดกล้ามเนื้อก่อนและหลังออกกำลังกาย 5-10 นาที เพื่อป้องกันการบาดเจ็บ',
+                        'ผู้สูงอายุควรเพิ่มการฝึกทรงตัว เช่น รำไทเก๊ก หรือโยคะ เพื่อลดความเสี่ยงการหกล้ม'
+                    ],
+                    caution: 'หากมีโรคประจำตัว เช่น โรคหัวใจ หรือความดันโลหิตสูง ควรปรึกษาแพทย์ก่อนเริ่มโปรแกรมออกกำลังกายหนัก'
+                }
+            },
+            {
+                id: 'sleep',
+                category: 'mind',
+                tag: 'การพักผ่อนนอนหลับ',
+                title: 'นอนหลับอย่างมีคุณภาพ 7-8 ชั่วโมง',
+                summary: 'เคล็ดลับปรับนาฬิกาชีวิตให้หลับสนิท ตื่นมาสดชื่น สมองปลอดโปร่งตลอดวัน',
+                icon: 'fa-bed',
+                colorClass: 'from-indigo-400 to-sky-500',
+                badgeBg: 'bg-sky-100 text-sky-700',
+                details: {
+                    intro: 'ช่วงเวลาที่เรานอนหลับสนิท ร่างกายจะหลั่งโกรทฮอร์โมน (Growth Hormone) เพื่อซ่อมแซมเซลล์ที่สึกหรอและจัดระเบียบความจำของสมอง',
+                    steps: [
+                        'เข้านอนและตื่นนอนให้ตรงเวลาทุกวัน แม้ในวันหยุดเสาร์-อาทิตย์',
+                        'งดใช้อุปกรณ์อิเล็กทรอนิกส์ (มือถือ แท็บเล็ต) อย่างน้อย 30-60 นาทีก่อนนอน เพราะแสงสีฟ้าจะยับยั้งสารเมลาโทนิน',
+                        'หลีกเลี่ยงเครื่องดื่มที่มีคาเฟอีน (ชา กาแฟ น้ำอัดลม) หลังเวลา 14.00 น.',
+                        'จัดห้องนอนให้มืด เงียบสงบ และมีอุณหภูมิเย็นสบายพอเหมาะ'
+                    ],
+                    caution: 'หากมีอาการนอนกรนเสียงดังมากหรือหยุดหายใจขณะหลับ ควรพบแพทย์เพื่อตรวจการนอนหลับ'
+                }
+            },
+            {
+                id: 'hydration',
+                category: 'body',
+                tag: 'การดื่มน้ำสะอาด',
+                title: 'ดื่มน้ำให้เพียงพอ ฟื้นฟูระบบเผาผลาญ',
+                summary: 'ความสำคัญของน้ำเปล่าต่ออวัยวะภายใน และตารางเวลาดื่มน้ำที่แนะนำในแต่ละวัน',
+                icon: 'fa-droplet',
+                colorClass: 'from-cyan-400 to-blue-500',
+                badgeBg: 'bg-cyan-100 text-cyan-700',
+                details: {
+                    intro: 'ร่างกายมนุษย์มีน้ำเป็นส่วนประกอบถึง 60-70% น้ำช่วยลำเลียงสารอาหาร ควบคุมอุณหภูมิร่างกาย และขับของเสียผ่านทางไต',
+                    steps: [
+                        'ตื่นนอนตอนเช้า: ดื่มน้ำอุ่นหรือน้ำอุณหภูมิห้อง 1-2 แก้ว เพื่อกระตุ้นระบบขับถ่าย',
+                        'ก่อนมื้ออาหาร 30 นาที: ดื่ม 1 แก้ว ช่วยระบบย่อยอาหารและลดความอยากอาหารเกินจำเป็น',
+                        'ระหว่างวัน: จิบน้ำบ่อยๆ ทุก 1-2 ชั่วโมง ไม่ควรรอให้รู้สึกกระหายน้ำจัด',
+                        'สังเกตสีปัสสาวะ: หากมีสีเหลืองอ่อนใส แสดงว่าร่างกายได้รับน้ำเพียงพอแล้ว'
+                    ],
+                    caution: 'ผู้ป่วยโรคไตเรื้อรังหรือภาวะหัวใจล้มเหลว ควรจำกัดปริมาณน้ำตามคำแนะนำของแพทย์อย่างเคร่งครัด'
+                }
+            },
+            {
+                id: 'stress',
+                category: 'mind',
+                tag: 'การจัดการความเครียด',
+                title: 'ผ่อนคลายความเครียด ดูแลสุขภาพใจ',
+                summary: 'เทคนิคการหายใจและวิธีจัดการอารมณ์เมื่อเผชิญความกดดันจากการทำงานและชีวิตประจำวัน',
+                icon: 'fa-spa',
+                colorClass: 'from-teal-400 to-emerald-500',
+                badgeBg: 'bg-teal-100 text-teal-700',
+                details: {
+                    intro: 'ความเครียดสะสมส่งผลให้ร่างกายหลั่งฮอร์โมนคอร์ติซอลมากเกินไป ทำให้ภูมิคุ้มกันลดลง นอนไม่หลับ และเสี่ยงต่อโรคกระเพาะอาหารหรือความดันสูง',
+                    steps: [
+                        'ฝึกหายใจแบบ 4-7-8: หายใจเข้าทางจมูก 4 วินาที กลั้นไว้ 7 วินาที และค่อยๆ ผ่อนลมหายใจออกทางปาก 8 วินาที',
+                        'หากิจกรรมผ่อนคลายที่ชอบ เช่น ฟังเพลงเบาๆ ปลูกต้นไม้ อ่านหนังสือ หรือพูดคุยกับคนที่ไว้ใจ',
+                        'ฝึกเจริญสติ (Mindfulness) อยู่กับปัจจุบัน ลดการกังวลถึงเรื่องที่ยังไม่เกิดขึ้น',
+                        'พักสายตาจากหน้าจอทุกๆ 20 นาที ด้วยกฎ 20-20-20 (มองไกล 20 ฟุต นาน 20 วินาที)'
+                    ],
+                    caution: 'หากรู้สึกเศร้า หดหู่ หรือหมดกำลังใจต่อเนื่องเกิน 2 สัปดาห์ สามารถโทรปรึกษาสายด่วนสุขภาพจิต 1323 ได้ฟรีตลอด 24 ชั่วโมง'
+                }
+            },
+            {
+                id: 'checkup',
+                category: 'body',
+                tag: 'การตรวจสุขภาพประจำปี',
+                title: 'รู้เท่าทันโรค ด้วยการตรวจคัดกรอง',
+                summary: 'รายการตรวจสุขภาพพื้นฐานที่ประชาชนควรตรวจเช็กเป็นประจำทุกปีเพื่อป้องกันก่อนเกิดโรค',
+                icon: 'fa-stethoscope',
+                colorClass: 'from-sky-400 to-indigo-500',
+                badgeBg: 'bg-indigo-100 text-indigo-700',
+                details: {
+                    intro: 'โรคเรื้อรังหลายชนิดมักไม่แสดงอาการในระยะเริ่มต้น การตรวจสุขภาพประจำปีช่วยให้พบความผิดปกติได้ไวและรักษาให้หายขาดได้ง่ายขึ้น',
+                    steps: [
+                        'วัดความดันโลหิต: ค่าปกติควรน้อยกว่า 120/80 มิลลิเมตรปรอท',
+                        'ตรวจระดับน้ำตาลในเลือด (FBS): หลังอดอาหาร 8 ชั่วโมง ค่าปกติควรต่ำกว่า 100 mg/dL',
+                        'ตรวจระดับไขมันในเลือด (คอเลสเตอรอล, ไตรกลีเซอไรด์, HDL, LDL)',
+                        'ตรวจการทำงานของตับ ไต และเอกซเรย์ปอดประจำปี'
+                    ],
+                    caution: 'ประชาชนไทยสามารถใช้สิทธิหลักประกันสุขภาพแห่งชาติ (บัตรทอง) หรือประกันสังคม ตรวจคัดกรองโรคเบื้องต้นได้ตามหน่วยบริการใกล้บ้าน'
+                }
+            },
+            {
+                id: 'hygiene',
+                category: 'body',
+                tag: 'สุขอนามัยส่วนบุคคล',
+                title: 'กินร้อน ช้อนกลาง ล้างมือ ป้องกันโรคติดต่อ',
+                summary: 'เกราะป้องกันเชื้อโรคและไวรัสเข้าสู่ร่างกายด้วยสุขอนามัยพื้นฐานที่ทำได้ทุกวัน',
+                icon: 'fa-hands-bubbles',
+                colorClass: 'from-mint-400 to-cyan-500',
+                badgeBg: 'bg-mint-100 text-mint-700',
+                details: {
+                    intro: 'เชื้อโรคและแบคทีเรียส่วนใหญ่เข้าสู่ร่างกายผ่านการสัมผัสทางมือและการรับประทานอาหารที่ไม่สะอาด',
+                    steps: [
+                        'ล้างมือด้วยน้ำและสบู่อย่างน้อย 20 วินาที (7 ขั้นตอน) ก่อนกินอาหารและหลังเข้าห้องน้ำ',
+                        'เลือกรับประทานอาหารที่ปรุงสุกใหม่ๆ และใช้ช้อนกลางส่วนตัวเสมอเมื่อทานอาหารร่วมกับผู้อื่น',
+                        'แปรงฟันอย่างน้อยวันละ 2 ครั้ง (เช้าและก่อนนอน) ด้วยยาสีฟันผสมฟลูออไรด์ นานครั้งละ 2 นาที',
+                        'สวมหน้ากากอนามัยเมื่ออยู่ในที่แออัดหรือมีอาการไอ จาม เพื่อป้องกันการแพร่กระจายเชื้อ'
+                    ],
+                    caution: 'ควรเปลี่ยนแปรงสีฟันทุกๆ 3 เดือน หรือทันทีหลังจากหายป่วยจากไข้หวัด'
+                }
+            }
+        ];
+
+        const foodGroupsData = [
+            {
+                group: 'หมู่ที่ 1',
+                name: 'โปรตีน (Protein)',
+                examples: 'เนื้อสัตว์ไม่ติดมัน ปลา ไข่ นม ถั่วเหลือง เต้าหู้',
+                benefit: 'เสริมสร้างกล้ามเนื้อ ซ่อมแซมส่วนที่สึกหรอ สร้างภูมิคุ้มกันและฮอร์โมน',
+                icon: 'fa-egg',
+                color: 'rose',
+                bgGradient: 'from-rose-400 to-pink-500',
+                cardBorder: 'border-rose-200',
+                badgeColor: 'bg-rose-100 text-rose-700',
+                tips: 'ควรเลือกโปรตีนย่อยง่ายและไขมันต่ำ เช่น เนื้อปลา อกไก่ ไข่ไก่ และโปรตีนจากพืชอย่างถั่วเมล็ดแห้ง หลีกเลี่ยงเนื้อสัตว์แปรรูป (ไส้กรอก เบคอน)'
+            },
+            {
+                group: 'หมู่ที่ 2',
+                name: 'คาร์โบไฮเดรต (Carbohydrate)',
+                examples: 'ข้าวกล้อง ข้าวซ้อมมือ ขนมปังโฮลวีท เผือก มัน ข้าวโพด',
+                benefit: 'ให้พลังงานหลักแก่ร่างกายและสมองในการทำกิจกรรมต่างๆ ในชีวิตประจำวัน',
+                icon: 'fa-wheat-awn',
+                color: 'amber',
+                bgGradient: 'from-amber-400 to-orange-500',
+                cardBorder: 'border-amber-200',
+                badgeColor: 'bg-amber-100 text-amber-700',
+                tips: 'เลือกคาร์โบไฮเดรตเชิงซ้อนที่ไม่ขัดสี เช่น ข้าวกล้อง ข้าวไรซ์เบอร์รี่ เพราะมีใยอาหารสูง ช่วยชะลอการดูดซึมน้ำตาลและทำให้อิ่มนาน'
+            },
+            {
+                group: 'หมู่ที่ 3',
+                name: 'เกลือแร่ / แร่ธาตุ (Minerals)',
+                examples: 'ผักใบเขียว คะน้า บรอกโคลี แครอท ฟักทอง มะเขือเทศ',
+                benefit: 'เสริมสร้างกระดูกและฟัน ควบคุมสมดุลน้ำในร่างกาย และมีใยอาหารช่วยขับถ่าย',
+                icon: 'fa-carrot',
+                color: 'emerald',
+                bgGradient: 'from-emerald-400 to-green-600',
+                cardBorder: 'border-emerald-200',
+                badgeColor: 'bg-emerald-100 text-emerald-700',
+                tips: 'ควรรับประทานผักให้หลากหลายสี (เขียว เหลือง ส้ม แดง ม่วง ขาว) อย่างน้อยวันละ 400 กรัม เพื่อได้รับสารต้านอนุมูลอิสระครบถ้วน'
+            },
+            {
+                group: 'หมู่ที่ 4',
+                name: 'วิตามิน (Vitamins)',
+                examples: 'ผลไม้ตามฤดูกาล ฝรั่ง ส้ม กล้วย มะละกอ แก้วมังกร เบอร์รี',
+                benefit: 'บำรุงผิวพรรณ สายตา เหงือกและฟัน เสริมภูมิต้านทานป้องกันโรคหวัด',
+                icon: 'fa-apple-whole',
+                color: 'purple',
+                bgGradient: 'from-violet-400 to-purple-600',
+                cardBorder: 'border-purple-200',
+                badgeColor: 'bg-purple-100 text-purple-700',
+                tips: 'เลือกผลไม้รสหวานน้อย เช่น ฝรั่ง ชมพู่ แก้วมังกร แอปเปิลเขียว ทานสดแทนการดื่มน้ำผลไม้คั้นแยกกากเพื่อให้ได้ใยอาหารเต็มที่'
+            },
+            {
+                group: 'หมู่ที่ 5',
+                name: 'ไขมัน (Fats)',
+                examples: 'น้ำมันรำข้าว น้ำมันมะกอก อะโวคาโด ปลาทะเล เมล็ดธัญพืช',
+                benefit: 'ให้ความอบอุ่นแก่ร่างกาย ช่วยดูดซึมวิตามิน A, D, E, K และบำรุงสมอง',
+                icon: 'fa-droplet',
+                color: 'sky',
+                bgGradient: 'from-sky-400 to-blue-500',
+                cardBorder: 'border-sky-200',
+                badgeColor: 'bg-sky-100 text-sky-700',
+                tips: 'เลือกบริโภคไขมันดี (ไขมันไม่อิ่มตัว) จากพืชและปลาทะเล ลดอาหารทอดน้ำมันท่วม กะทิ และหลีกเลี่ยงไขมันทรานส์จากเบเกอรี่และครีมเทียม'
+            }
+        ];
+
+        const videoGuidesData = [
+            {
+                id: 'vid-breathing',
+                badge: 'หมวดการผ่อนคลายและปอด',
+                title: 'ฝึกหายใจ 4-7-8 ลดความเครียดและบริหารปอด',
+                duration: '00:50',
+                totalSeconds: 50,
+                desc: 'เรียนรู้จังหวะการหายใจเข้า-กลั้น-ผ่อนออกอย่างช้าๆ ตามวงกลมนำสายตา พร้อมเสียงพากย์นับจังหวะภาษาไทยที่พูดชัดถ้อยชัดคำ ช่วยลดอัตราการเต้นของหัวใจและทำให้จิตใจสงบ',
+                type: 'breathing',
+                steps: [
+                    {
+                        time: 0,
+                        text: 'เตรียมตัวนั่งหลังตรง ผ่อนคลายหัวไหล่ วางมือทั้งสองข้างบนหน้าตักอย่างสบาย',
+                        sentences: [
+                            'สวัสดีครับ ยินดีต้อนรับสู่ การฝึกหายใจแบบ สี่ เจ็ด แปด',
+                            'เริ่มต้นด้วยการ นั่งหลังตรง ผ่อนคลายหัวไหล่',
+                            'และวางมือทั้งสองข้าง บนหน้าตักอย่างสบายครับ'
+                        ]
+                    },
+                    {
+                        time: 11,
+                        text: 'ช่วงที่ 1: ค่อยๆ สูดลมหายใจเข้าลึกๆ ทางจมูก นับ 1.. 2.. 3.. 4..',
+                        sentences: [
+                            'ช่วงที่หนึ่ง ค่อยๆ สูดลมหายใจเข้าลึกๆ ทางจมูก อย่างช้าๆ ครับ',
+                            'นับ หนึ่ง สอง สาม สี่'
+                        ]
+                    },
+                    {
+                        time: 21,
+                        text: 'ช่วงที่ 2: กลั้นลมหายใจไว้เบาๆ 7 วินาที เพื่อให้ออกซิเจนแลกเปลี่ยนในปอด',
+                        sentences: [
+                            'ช่วงที่สอง กลั้นลมหายใจไว้เบาๆ เจ็ดวินาที',
+                            'เพื่อให้ออกซิเจน ไหลเวียนไปเลี้ยงร่างกาย อย่างเต็มที่ครับ'
+                        ]
+                    },
+                    {
+                        time: 31,
+                        text: 'ช่วงที่ 3: ค่อยๆ ผ่อนลมหายใจออกทางปากอย่างช้าๆ ยาวๆ 8 วินาที',
+                        sentences: [
+                            'ช่วงที่สาม ค่อยๆ ผ่อนลมหายใจออก ทางปาก อย่างช้าๆ',
+                            'ปล่อยลมหายใจออกยาวๆ จนสุดลมหายใจครับ'
+                        ]
+                    },
+                    {
+                        time: 41,
+                        text: 'ยอดเยี่ยมมาก! ทำซ้ำต่อเนื่อง 3-4 รอบ จะช่วยให้สมองปลอดโปร่งและลดความเครียดได้ดี',
+                        sentences: [
+                            'ยอดเยี่ยมมากครับ แนะนำให้ทำซ้ำต่อเนื่อง สามถึงสี่รอบ',
+                            'จะช่วยให้จิตใจสงบ สมองปลอดโปร่ง และนอนหลับได้ง่ายขึ้นครับ'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'vid-stretching',
+                badge: 'หมวดการออกกำลังกาย',
+                title: 'ท่าบริหารยืดเหยียดคลายกล้ามเนื้อออฟฟิศซินโดรม',
+                duration: '00:50',
+                totalSeconds: 50,
+                desc: 'ท่าบริหารร่างกายง่ายๆ สามารถทำได้ทั้งขณะนั่งเก้าอี้หรือยืนพัก พร้อมเสียงพากย์ภาษาไทยที่พูดชัดถ้อยชัดคำ แนะนำทีละขั้นตอน ช่วยคลายกล้ามเนื้อคอ บ่า ไหล่',
+                type: 'stretching',
+                steps: [
+                    {
+                        time: 0,
+                        text: 'ท่าเตรียม: ยืนหรือนั่งตัวตรง กางขาเล็กน้อย ให้ลำตัวตั้งตรงสมดุล',
+                        sentences: [
+                            'มาบริหารร่างกาย คลายอาการ ออฟฟิศ ซินโดรม กันครับ',
+                            'เริ่มจาก นั่งหรือยืนตัวตรง ผ่อนคลายกล้ามเนื้อคอ และบ่าทั้งสองข้างครับ'
+                        ]
+                    },
+                    {
+                        time: 10,
+                        text: 'ท่าที่ 1: ยกแขนทั้งสองข้างขึ้นเหนือศีรษะ ประสานมือยืดลำตัวขึ้นให้สุด',
+                        sentences: [
+                            'ท่าที่หนึ่ง ยกแขนทั้งสองข้าง ขึ้นเหนือศีรษะ',
+                            'ประสานฝ่ามือ แล้วค่อยๆ ยืดลำตัวขึ้นให้สุด ค้างไว้สักครู่ครับ'
+                        ]
+                    },
+                    {
+                        time: 21,
+                        text: 'ท่าที่ 2: เอียงลำตัวไปด้านซ้ายและขวาช้าๆ เพื่อยืดกล้ามเนื้อสีข้างและแผ่นหลัง',
+                        sentences: [
+                            'ท่าที่สอง ค่อยๆ เอียงลำตัว ไปทางด้านซ้าย',
+                            'และสลับเอียงไปทางด้านขวา อย่างช้าๆ เพื่อยืดกล้ามเนื้อสีข้างครับ'
+                        ]
+                    },
+                    {
+                        time: 32,
+                        text: 'ท่าที่ 3: ลดแขนลง หมุนหัวไหล่ไปด้านหลังเป็นวงกลมกว้างๆ คลายความตึงสะบัก',
+                        sentences: [
+                            'ท่าที่สาม ค่อยๆ ลดแขนลง แล้วหมุนหัวไหล่ไปด้านหลัง',
+                            'หมุนเป็นวงกลมกว้างๆ เพื่อคลายความตึง บริเวณบ่าและสะบักครับ'
+                        ]
+                    },
+                    {
+                        time: 42,
+                        text: 'เสร็จสิ้น! ควรลุกขึ้นยืดเหยียดแบบนี้ทุกๆ 1 ชั่วโมงของการทำงานหน้าจอ',
+                        sentences: [
+                            'เสร็จเรียบร้อยครับ ควรลุกขึ้นยืดเหยียดกล้ามเนื้อแบบนี้',
+                            'ทุกๆ หนึ่งชั่วโมง เพื่อสุขภาพที่ดี ในระยะยาวครับ'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'vid-nutrition',
+                badge: 'หมวดโภชนาการ 5 หมู่',
+                title: 'การจัดจานอาหารสุขภาพสูตร 2:1:1 ใน 1 มื้อ',
+                duration: '00:50',
+                totalSeconds: 50,
+                desc: 'สาธิตวิธีตักอาหารใส่จานในสัดส่วนที่เหมาะสม ผัก 2 ส่วน ข้าวไม่ขัดสี 1 ส่วน และโปรตีนไขมันต่ำ 1 ส่วน พร้อมเสียงบรรยายภาษาไทยที่เข้าใจง่าย',
+                type: 'nutrition',
+                steps: [
+                    {
+                        time: 0,
+                        text: 'เริ่มต้นด้วยจานอาหารขนาดมาตรฐานเส้นผ่านศูนย์กลาง 9 นิ้ว แล้วแบ่งจานเป็น 4 ส่วน',
+                        sentences: [
+                            'มาเรียนรู้ การจัดจานอาหารสุขภาพ สูตร สอง ต่อ หนึ่ง ต่อ หนึ่ง กันครับ',
+                            'เริ่มจากเตรียมจานขนาดเก้านิ้ว แล้วแบ่งพื้นที่ในจาน ออกเป็นสี่ส่วนเท่าๆ กันครับ'
+                        ]
+                    },
+                    {
+                        time: 11,
+                        text: 'ผัก 2 ส่วน (ครึ่งจาน): ใส่ผักใบเขียวและผักหลากสีให้เต็มพื้นที่ 50% ของจาน',
+                        sentences: [
+                            'สองส่วนแรก หรือครึ่งหนึ่งของจาน ให้ตักผักใบเขียว และผักหลากสีสัน',
+                            'เพื่อให้ร่างกายได้รับ วิตามิน แร่ธาตุ และใยอาหารอย่างเต็มที่ครับ'
+                        ]
+                    },
+                    {
+                        time: 22,
+                        text: 'ข้าวแป้ง 1 ส่วน (1 ใน 4 ของจาน): ตักข้าวกล้องหรือข้าวไม่ขัดสีประมาณ 1-2 ทัพพี',
+                        sentences: [
+                            'หนึ่งส่วนต่อมา ให้ตักข้าวกล้อง หรือข้าวไรซ์เบอร์รี่ ที่ไม่ขัดสี',
+                            'ซึ่งจะช่วยให้อยู่ท้องนาน และควบคุมระดับน้ำตาลในเลือด ได้ดีครับ'
+                        ]
+                    },
+                    {
+                        time: 33,
+                        text: 'เนื้อสัตว์ 1 ส่วน (1 ใน 4 สุดท้าย): ใส่เนื้อปลา อกไก่ ไข่ หรือเต้าหู้ไขมันต่ำ',
+                        sentences: [
+                            'และหนึ่งส่วนสุดท้าย ให้เลือกโปรตีนไขมันต่ำ เช่น เนื้อปลา อกไก่ ไข่ต้ม หรือเต้าหู้',
+                            'เพื่อช่วยซ่อมแซมส่วนที่สึกหรอ และเสริมสร้างกล้ามเนื้อครับ'
+                        ]
+                    },
+                    {
+                        time: 42,
+                        text: 'ทานคู่กับน้ำเปล่าสะอาดและผลไม้หวานน้อย อิ่มอร่อยได้สารอาหารครบ 5 หมู่!',
+                        sentences: [
+                            'เพียงเท่านี้ คุณก็จะได้มื้ออาหารที่อร่อย อิ่มพอดี',
+                            'และได้สารอาหารครบทั้งห้าหมู่ ในทุกๆ วันครับ'
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        /**
+         * ระบบสลับแท็บหน้าต่างข้อมูล (Multi-view Tabs รองรับทั้ง Desktop/Tablet และ Mobile Bottom Bar)
+         */
+        const desktopTabButtons = document.querySelectorAll('.nav-tab-btn');
+        const mobileTabButtons = document.querySelectorAll('.mobile-tab-btn');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        function switchActiveTab(targetId) {
+            // อัปเดตสไตล์ปุ่มแท็บด้านบน (Tablet & Desktop)
+            desktopTabButtons.forEach(b => {
+                const isMatch = b.getAttribute('data-tab') === targetId;
+                if (isMatch) {
+                    b.classList.add('active', 'bg-gradient-to-r', 'from-mint-500', 'to-skysoft-500', 'text-white', 'shadow-md', 'shadow-mint-500/20', 'font-semibold');
+                    b.classList.remove('text-slate-600', 'hover:bg-mint-50', 'font-medium');
+                } else {
+                    b.classList.remove('active', 'bg-gradient-to-r', 'from-mint-500', 'to-skysoft-500', 'text-white', 'shadow-md', 'shadow-mint-500/20', 'font-semibold');
+                    b.classList.add('text-slate-600', 'hover:bg-mint-50', 'font-medium');
+                }
+            });
+
+            // อัปเดตสไตล์ปุ่มแท็บด้านล่าง (Mobile)
+            mobileTabButtons.forEach(b => {
+                const isMatch = b.getAttribute('data-tab') === targetId;
+                if (isMatch) {
+                    b.classList.add('active', 'text-mint-700', 'bg-mint-50', 'font-semibold');
+                    b.classList.remove('text-slate-500', 'font-medium');
+                } else {
+                    b.classList.remove('active', 'text-mint-700', 'bg-mint-50', 'font-semibold');
+                    b.classList.add('text-slate-500', 'font-medium');
+                }
+            });
+
+            // แสดงแท็บที่เลือก
+            tabPanes.forEach(pane => {
+                pane.classList.remove('active');
+            });
+            const targetPane = document.getElementById(targetId);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+
+            // เลื่อนหน้าจอกลับขึ้นด้านบนอย่างนุ่มนวลบนมือถือ
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // หากสลับไปหน้าวิดีโอ ให้ปรับขนาด Canvas ให้พอดี
+            if (targetId === 'tab-videos') {
+                setTimeout(() => {
+                    resizeVideoCanvas();
+                    drawVideoFrame();
+                }, 60);
+            } else {
+                stopVideoPlayback();
+            }
+        }
+
+        desktopTabButtons.forEach(btn => {
+            btn.addEventListener('click', () => switchActiveTab(btn.getAttribute('data-tab')));
+        });
+
+        mobileTabButtons.forEach(btn => {
+            btn.addEventListener('click', () => switchActiveTab(btn.getAttribute('data-tab')));
+        });
+
+        /**
+         * เรนเดอร์การ์ดคู่มือการดูแลสุขภาพตัวเอง (Tab 1)
+         */
+        function renderSelfCareCards(filter = 'all') {
+            const grid = document.getElementById('selfcare-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'all' 
+                ? selfCareData 
+                : selfCareData.filter(item => item.category === filter);
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'glass-card rounded-3xl p-6 border border-mint-100 hover:border-mint-300 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold ${item.badgeBg}">${item.tag}</span>
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr ${item.colorClass} text-white flex items-center justify-center text-lg shadow-sm group-hover:scale-110 transition-transform">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-2 group-hover:text-mint-700 transition-colors">${item.title}</h3>
+                        <p class="text-sm text-slate-600 font-body leading-relaxed mb-5">${item.summary}</p>
+                    </div>
+                    <button class="w-full py-2.5 px-4 rounded-xl bg-mint-50 group-hover:bg-mint-600 text-mint-700 group-hover:text-white font-medium text-sm transition flex items-center justify-center gap-2">
+                        <span>เปิดอ่านคู่มือเจาะลึก</span>
+                        <i class="fa-solid fa-up-right-from-square text-xs"></i>
+                    </button>
+                `;
+                card.addEventListener('click', () => openSelfCareModal(item));
+                grid.appendChild(card);
+            });
+        }
+
+        // ตัวกรองหมวดหมู่ในหน้าคู่มือดูแลสุขภาพ
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(c => {
+                    c.classList.remove('active', 'bg-mint-600', 'text-white');
+                    c.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+                });
+                chip.classList.add('active', 'bg-mint-600', 'text-white');
+                chip.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+                
+                renderSelfCareCards(chip.getAttribute('data-filter'));
+            });
+        });
+
+        /**
+         * เรนเดอร์การ์ดอาหารหลัก 5 หมู่ (Tab 2)
+         */
+        function renderFoodGroups() {
+            const grid = document.getElementById('foodgroups-grid');
+            grid.innerHTML = '';
+
+            foodGroupsData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-3xl p-5 border ${item.cardBorder} hover:shadow-md transition-all flex flex-col justify-between cursor-pointer group`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-bold ${item.badgeColor}">${item.group}</span>
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr ${item.bgGradient} text-white flex items-center justify-center shadow-sm group-hover:rotate-6 transition-transform">
+                                <i class="fa-solid ${item.icon}"></i>
+                            </div>
+                        </div>
+                        <h4 class="text-base font-bold text-slate-800 mb-2">${item.name}</h4>
+                        <div class="text-xs text-slate-500 mb-2">
+                            <strong class="text-slate-700">ตัวอย่าง:</strong> ${item.examples}
+                        </div>
+                        <p class="text-xs text-slate-600 font-body leading-relaxed mb-4">
+                            <strong class="text-slate-700">ประโยชน์:</strong> ${item.benefit}
+                        </p>
+                    </div>
+                    <button class="w-full py-2 px-3 rounded-xl bg-slate-50 group-hover:bg-slate-800 text-slate-700 group-hover:text-white text-xs font-medium transition flex items-center justify-center gap-1.5">
+                        <span>ดูคำแนะนำเพิ่มเติม</span>
+                        <i class="fa-solid fa-circle-info"></i>
+                    </button>
+                `;
+                card.addEventListener('click', () => openFoodGroupModal(item));
+                grid.appendChild(card);
+            });
+        }
+
+        /**
+         * ระบบหน้าต่างย่อย (Modal Window)
+         */
+        const modalBackdrop = document.getElementById('detail-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const modalDoneBtn = document.getElementById('modal-done-btn');
+
+        function openSelfCareModal(item) {
+            document.getElementById('modal-header-bg').className = `px-6 py-5 bg-gradient-to-r ${item.colorClass} text-white flex items-center justify-between`;
+            document.getElementById('modal-icon-box').innerHTML = `<i class="fa-solid ${item.icon}"></i>`;
+            document.getElementById('modal-category').textContent = item.tag;
+            document.getElementById('modal-title').textContent = item.title;
+
+            const stepsHtml = item.details.steps.map((step, idx) => `
+                <li class="flex items-start gap-3 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+                    <span class="w-6 h-6 rounded-full bg-mint-500 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                    <span class="text-sm text-slate-700 leading-relaxed">${step}</span>
+                </li>
+            `).join('');
+
+            document.getElementById('modal-body-content').innerHTML = `
+                <p class="text-base text-slate-700 leading-relaxed bg-mint-50/60 p-4 rounded-2xl border border-mint-100">
+                    ${item.details.intro}
+                </p>
+                <div>
+                    <h4 class="font-sans font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-mint-600"></i>
+                        <span>แนวทางปฏิบัติที่แนะนำ:</span>
+                    </h4>
+                    <ul class="space-y-2.5">${stepsHtml}</ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 flex items-start gap-3">
+                    <i class="fa-solid fa-circle-exclamation text-amber-500 text-lg mt-0.5"></i>
+                    <div class="text-xs sm:text-sm text-amber-900">
+                        <strong>ข้อควรระวังและคำแนะนำเพิ่มเติม:</strong> ${item.details.caution}
+                    </div>
+                </div>
+            `;
+
+            modalBackdrop.classList.add('active');
+        }
+
+        function openFoodGroupModal(item) {
+            document.getElementById('modal-header-bg').className = `px-6 py-5 bg-gradient-to-r ${item.bgGradient} text-white flex items-center justify-between`;
+            document.getElementById('modal-icon-box').innerHTML = `<i class="fa-solid ${item.icon}"></i>`;
+            document.getElementById('modal-category').textContent = `โภชนาการหลัก 5 หมู่ • ${item.group}`;
+            document.getElementById('modal-title').textContent = item.name;
+
+            document.getElementById('modal-body-content').innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">แหล่งอาหารสำคัญ</div>
+                        <p class="text-sm font-medium text-slate-800">${item.examples}</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/70">
+                        <div class="text-xs font-bold text-slate-500 uppercase mb-1">หน้าที่ต่อร่างกาย</div>
+                        <p class="text-sm font-medium text-slate-800">${item.benefit}</p>
+                    </div>
+                </div>
+                <div class="p-4 rounded-2xl bg-mint-50 border border-mint-200">
+                    <h4 class="font-sans font-bold text-mint-800 mb-1.5 flex items-center gap-2">
+                        <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                        <span>เคล็ดลับการเลือกทานให้ได้ประโยชน์สูงสุด</span>
+                    </h4>
+                    <p class="text-sm text-slate-700 leading-relaxed">${item.tips}</p>
+                </div>
+            `;
+
+            modalBackdrop.classList.add('active');
+        }
+
+        function closeModal() {
+            modalBackdrop.classList.remove('active');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modalDoneBtn.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop) closeModal();
+        });
+
+        /**
+         * ระบบคลังวิดีโอสาธิตอินเทอร์แอคทีฟ พร้อมเสียงพากย์ภาษาไทยชัดถ้อยชัดคำ (Web Speech API - th-TH)
+         * แบ่งอ่านทีละประโยคสั้นๆ พร้อมจังหวะหยุดหายใจ 400ms เพื่อป้องกันเสียงรวบคำหรือขาดช่วงบนมือถือและคอมพิวเตอร์
+         */
+        let currentVideoIndex = 0;
+        let isPlaying = false;
+        let isMuted = false;
+        let videoElapsed = 0;
+        const VIDEO_DURATION = 50;
+        let lastFrameTime = null;
+        let animFrameId = null;
+        let lastNarratedStepIndex = -1;
+        let selectedThaiVoice = null;
+        let availableThaiVoices = [];
+        let speechRate = 0.82; // ความเร็วพูดช้าชัดเจน
+        let speechQueueTimer = null;
+        let keepAliveTimer = null;
+        let speechGenerationId = 0;
+
+        const canvas = document.getElementById('health-video-canvas');
+        const ctx = canvas.getContext('2d');
+        const centerPlayBtn = document.getElementById('center-play-btn');
+        const playPauseBtn = document.getElementById('video-play-pause-btn');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const playPauseLabel = document.getElementById('play-pause-label');
+        const restartBtn = document.getElementById('video-restart-btn');
+        const muteBtn = document.getElementById('video-mute-btn');
+        const muteIcon = document.getElementById('mute-icon');
+        const muteLabel = document.getElementById('mute-label');
+        const voiceRateSelect = document.getElementById('voice-rate-select');
+        const thaiVoiceSelect = document.getElementById('thai-voice-select');
+        const testVoiceBtn = document.getElementById('test-voice-btn');
+        const progressBar = document.getElementById('video-progress-bar');
+        const progressContainer = document.getElementById('video-progress-container');
+        const timeDisplay = document.getElementById('video-time-display');
+        const subtitleText = document.getElementById('video-subtitle-text');
+        const voiceStatusLabel = document.getElementById('voice-status-label');
+        const voiceWaveIcon = document.getElementById('voice-wave-icon');
+
+        // ค้นหาและจัดอันดับเสียงพากย์ภาษาไทย (th-TH) ที่พูดชัดที่สุดในอุปกรณ์ (มือถือ/แท็บเล็ต/คอมพิวเตอร์)
+        function loadThaiVoices() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            if (!voices || voices.length === 0) return;
+
+            const thVoices = voices.filter(v =>
+                v.lang === 'th-TH' ||
+                v.lang.toLowerCase().startsWith('th') ||
+                v.name.toLowerCase().includes('thai') ||
+                v.name.includes('ไทย')
+            );
+
+            // จัดลำดับความชัดเจนของเสียงพากย์ภาษาไทยตามเอนจินมาตรฐานของแต่ละแพลตฟอร์ม
+            const scoreVoice = (v) => {
+                const name = v.name.toLowerCase();
+                let score = 0;
+                if (name.includes('natural') || name.includes('online')) score += 50; // Microsoft Edge Natural Online Voices (ชัดมาก)
+                if (name.includes('google')) score += 40; // Android / Chrome Google Thai
+                if (name.includes('premwadee') || name.includes('niwat')) score += 35; // Windows / Edge Thai
+                if (name.includes('kanya') || name.includes('narisa')) score += 30; // iOS / macOS Safari Thai
+                if (!v.localService) score += 10; // เสียงสังเคราะห์ความละเอียดสูง
+                return score;
+            };
+
+            availableThaiVoices = thVoices.sort((a, b) => scoreVoice(b) - scoreVoice(a));
+
+            // อัปเดตตัวเลือกใน Dropdown ให้ผู้ใช้สามารถเปลี่ยนเสียงคนพากย์ได้เอง
+            const currentVal = thaiVoiceSelect.value;
+            thaiVoiceSelect.innerHTML = '<option value="auto" class="bg-slate-800 text-white">คนพากย์: อัตโนมัติ (ชัดที่สุด)</option>';
+            availableThaiVoices.forEach((v, index) => {
+                const cleanName = v.name
+                    .replace('Microsoft ', '')
+                    .replace('Online (Natural) - ', '')
+                    .replace('Thai (Thailand)', 'ภาษาไทย');
+                const opt = document.createElement('option');
+                opt.value = String(index);
+                opt.className = 'bg-slate-800 text-white';
+                opt.textContent = `เสียง ${index + 1}: ${cleanName}`;
+                thaiVoiceSelect.appendChild(opt);
+            });
+
+            if (currentVal !== 'auto' && availableThaiVoices[Number(currentVal)]) {
+                thaiVoiceSelect.value = currentVal;
+                selectedThaiVoice = availableThaiVoices[Number(currentVal)];
+            } else {
+                selectedThaiVoice = availableThaiVoices[0] || null;
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            loadThaiVoices();
+            window.speechSynthesis.onvoiceschanged = loadThaiVoices;
+        }
+
+        // พูดทีละประโยคสั้นๆ พร้อมเว้นจังหวะหายใจ 380ms เพื่อให้ฟังชัดถ้อยชัดคำทุกพยางค์
+        function speakThaiSentences(sentences, forcePlayEvenIfPaused = false) {
+            if (isMuted && !forcePlayEvenIfPaused) return;
+
+            stopSpeech();
+            speechGenerationId += 1;
+            const currentGen = speechGenerationId;
+
+            if (!('speechSynthesis' in window)) {
+                playGentleChime('G5');
+                return;
+            }
+
+            if (availableThaiVoices.length === 0) {
+                loadThaiVoices();
+            }
+
+            // ปลดล็อกสถานะค้างบนเบราว์เซอร์มือถือ/Chrome
+            try {
+                if (window.speechSynthesis.paused) {
+                    window.speechSynthesis.resume();
+                }
+            } catch (e) {}
+
+            // Keep-alive timer ป้องกันเบราว์เซอร์ตัดเสียงพูดกลางคัน
+            keepAliveTimer = setInterval(() => {
+                if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+                    window.speechSynthesis.pause();
+                    window.speechSynthesis.resume();
+                }
+            }, 10000);
+
+            let idx = 0;
+            function speakNextSentence() {
+                if (currentGen !== speechGenerationId) return;
+                if (!forcePlayEvenIfPaused && (!isPlaying || isMuted)) {
+                    stopSpeech();
+                    return;
+                }
+                if (idx >= sentences.length) {
+                    clearInterval(keepAliveTimer);
+                    voiceStatusLabel.textContent = `เสียงพากย์ภาษาไทย (${speechRate}x)`;
+                    voiceWaveIcon.classList.remove('animate-bounce', 'text-emerald-400');
+                    return;
+                }
+
+                const sentenceText = sentences[idx].trim();
+                idx += 1;
+
+                if (!sentenceText) {
+                    speakNextSentence();
+                    return;
+                }
+
+                try {
+                    const utterance = new SpeechSynthesisUtterance(sentenceText);
+                    utterance.lang = 'th-TH';
+                    if (selectedThaiVoice) {
+                        utterance.voice = selectedThaiVoice;
+                    }
+                    utterance.rate = speechRate;
+                    utterance.pitch = 1.02;
+                    utterance.volume = 1.0;
+
+                    utterance.onstart = () => {
+                        if (currentGen !== speechGenerationId) return;
+                        voiceStatusLabel.textContent = `กำลังพากย์เสียงไทย (${speechRate}x)...`;
+                        voiceWaveIcon.classList.add('animate-bounce', 'text-emerald-400');
+                    };
+
+                    utterance.onend = () => {
+                        if (currentGen !== speechGenerationId) return;
+                        // เว้นจังหวะหายใจสั้นๆ 380 มิลลิวินาทีก่อนขึ้นประโยคถัดไป
+                        speechQueueTimer = setTimeout(() => {
+                            speakNextSentence();
+                        }, 380);
+                    };
+
+                    utterance.onerror = () => {
+                        if (currentGen !== speechGenerationId) return;
+                        clearInterval(keepAliveTimer);
+                        playGentleChime('G5');
+                        voiceStatusLabel.textContent = 'แสดงคำบรรยายภาษาไทย';
+                        voiceWaveIcon.classList.remove('animate-bounce', 'text-emerald-400');
+                    };
+
+                    window.speechSynthesis.speak(utterance);
+                } catch (err) {
+                    playGentleChime('G5');
+                }
+            }
+
+            speakNextSentence();
+        }
+
+        // หยุดเสียงพูดและเคลียร์คิวทันที
+        function stopSpeech() {
+            speechGenerationId += 1;
+            if (speechQueueTimer) {
+                clearTimeout(speechQueueTimer);
+                speechQueueTimer = null;
+            }
+            if (keepAliveTimer) {
+                clearInterval(keepAliveTimer);
+                keepAliveTimer = null;
+            }
+            if ('speechSynthesis' in window) {
+                try {
+                    window.speechSynthesis.cancel();
+                } catch (e) {}
+            }
+            if (voiceStatusLabel && voiceWaveIcon) {
+                voiceStatusLabel.textContent = isMuted ? 'ปิดเสียงพากย์อยู่' : 'พร้อมบรรยายเสียงภาษาไทย (ชัดถ้อยชัดคำ)';
+                voiceWaveIcon.classList.remove('animate-bounce', 'text-emerald-400');
+            }
+        }
+
+        // เรนเดอร์รายการ Playlist ด้านข้าง
+        function renderVideoPlaylist() {
+            const playlistEl = document.getElementById('video-playlist');
+            playlistEl.innerHTML = '';
+
+            videoGuidesData.forEach((vid, idx) => {
+                const isActive = idx === currentVideoIndex;
+                const item = document.createElement('button');
+                item.className = `w-full text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3 ${
+                    isActive 
+                        ? 'bg-mint-50 border-mint-400 shadow-sm' 
+                        : 'bg-white/90 border-slate-200/80 hover:border-mint-300'
+                }`;
+                item.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl ${isActive ? 'bg-mint-500 text-white' : 'bg-slate-100 text-slate-500'} flex items-center justify-center shrink-0">
+                        <i class="fa-solid ${isActive && isPlaying ? 'fa-volume-high animate-pulse' : 'fa-play'}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-2 mb-1">
+                            <span class="text-[11px] font-semibold text-mint-600 truncate">${vid.badge}</span>
+                            <span class="text-[11px] font-mono text-slate-400">${vid.duration}</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-800 line-clamp-2 leading-snug">${vid.title}</h4>
+                        <span class="inline-flex items-center gap-1 text-[10px] text-skysoft-600 mt-1 font-medium">
+                            <i class="fa-solid fa-comment-dots"></i> มีเสียงพากย์ภาษาไทย
+                        </span>
+                    </div>
+                `;
+                item.addEventListener('click', () => {
+                    selectVideo(idx, true);
+                });
+                playlistEl.appendChild(item);
+            });
+        }
+
+        function selectVideo(index, autoPlay = false) {
+            stopSpeech();
+            currentVideoIndex = index;
+            videoElapsed = 0;
+            lastNarratedStepIndex = -1;
+            const vid = videoGuidesData[currentVideoIndex];
+
+            document.getElementById('current-video-badge').textContent = vid.badge;
+            document.getElementById('current-video-title').textContent = vid.title;
+            document.getElementById('current-video-desc').textContent = vid.desc;
+
+            updateVideoUI(false);
+            renderVideoPlaylist();
+            drawVideoFrame();
+
+            if (autoPlay) {
+                startVideoPlayback();
+            } else {
+                stopVideoPlayback();
+            }
+        }
+
+        function resizeVideoCanvas() {
+            if (!canvas || !canvas.parentElement) return;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+            }
+        }
+
+        // เสียงกระดิ่งสำรองเบาๆ ผ่าน Tone.js
+        function playGentleChime(note = 'C5') {
+            if (isMuted || typeof Tone === 'undefined') return;
+            try {
+                if (Tone.context.state !== 'running') {
+                    Tone.start();
+                }
+                const synth = new Tone.Synth({
+                    oscillator: { type: 'sine' },
+                    envelope: { attack: 0.05, decay: 0.2, sustain: 0.1, release: 0.5 }
+                }).toDestination();
+                synth.volume.value = -16;
+                synth.triggerAttackRelease(note, '8n');
+            } catch (e) {}
+        }
+
+        function startVideoPlayback() {
+            if (videoElapsed >= VIDEO_DURATION) {
+                videoElapsed = 0;
+                lastNarratedStepIndex = -1;
+            }
+            isPlaying = true;
+            lastFrameTime = performance.now();
+            centerPlayBtn.classList.add('hidden');
+            playPauseIcon.className = 'fa-solid fa-pause';
+            playPauseLabel.textContent = 'หยุดชั่วคราว';
+            
+            // เริ่มพูดบทบรรยายของซีนปัจจุบันทันทีเมื่อกดเล่น
+            updateVideoUI(true);
+            renderVideoPlaylist();
+            animFrameId = requestAnimationFrame(videoLoop);
+        }
+
+        function stopVideoPlayback() {
+            isPlaying = false;
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            stopSpeech();
+            centerPlayBtn.classList.remove('hidden');
+            playPauseIcon.className = 'fa-solid fa-play';
+            playPauseLabel.textContent = 'เล่นวิดีโอ';
+            renderVideoPlaylist();
+        }
+
+        function videoLoop(now) {
+            if (!isPlaying) return;
+            const dt = (now - lastFrameTime) / 1000;
+            lastFrameTime = now;
+            videoElapsed += dt;
+
+            if (videoElapsed >= VIDEO_DURATION) {
+                videoElapsed = VIDEO_DURATION;
+                updateVideoUI(false);
+                drawVideoFrame();
+                stopVideoPlayback();
+                playGentleChime('C6');
+                showToast('รับชมวิดีโอพร้อมเสียงพากย์จบแล้ว สามารถเลือกชมคลิปถัดไปได้', 'info');
+                return;
+            }
+
+            updateVideoUI(true);
+            drawVideoFrame();
+            animFrameId = requestAnimationFrame(videoLoop);
+        }
+
+        function updateVideoUI(triggerVoice = false) {
+            const pct = (videoElapsed / VIDEO_DURATION) * 100;
+            progressBar.style.width = `${pct}%`;
+
+            const curSec = Math.floor(videoElapsed).toString().padStart(2, '0');
+            timeDisplay.textContent = `00:${curSec} / 00:${VIDEO_DURATION}`;
+
+            // ค้นหาซีนปัจจุบันตามเวลาของวิดีโอ
+            const vid = videoGuidesData[currentVideoIndex];
+            let activeIndex = 0;
+            for (let i = 0; i < vid.steps.length; i++) {
+                if (videoElapsed >= vid.steps[i].time) {
+                    activeIndex = i;
+                }
+            }
+
+            const activeStep = vid.steps[activeIndex];
+            subtitleText.textContent = activeStep.text;
+            // หากเปลี่ยนเข้าสู่ซีนใหม่และกำลังเล่นวิดีโออยู่ ให้พากย์เสียงภาษาไทยทีละประโยคทันที
+            if (triggerVoice && isPlaying && activeIndex !== lastNarratedStepIndex) {
+                lastNarratedStepIndex = activeIndex;
+                const sentenceList = activeStep.sentences || [activeStep.text];
+                speakThaiSentences(sentenceList, false);
+            }
+        }
+
+        // วาดภาพแอนิเมชันสาธิตบน Canvas ตามประเภทวิดีโอ
+        function drawVideoFrame() {
+            const w = canvas.width;
+            const h = canvas.height;
+            if (!w || !h) return;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // พื้นหลังไล่เฉดสีสงบสบายตา
+            const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+            bgGrad.addColorStop(0, '#0f172a');
+            bgGrad.addColorStop(1, '#134e4a');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            const vid = videoGuidesData[currentVideoIndex];
+            const cx = w / 2;
+            const cy = h * 0.44;
+
+            if (vid.type === 'breathing') {
+                // แอนิเมชันวงกลมฝึกหายใจขยาย-หดตามจังหวะ
+                const cycle = videoElapsed % 10;
+                let scale = 0.5;
+                let phaseLabel = 'หายใจเข้าลึกๆ...';
+                if (cycle < 4) {
+                    scale = 0.5 + (cycle / 4) * 0.5;
+                    phaseLabel = 'สูดลมหายใจเข้า (4 วิ)';
+                } else if (cycle < 6) {
+                    scale = 1.0;
+                    phaseLabel = 'กลั้นหายใจเบาๆ';
+                } else {
+                    scale = 1.0 - ((cycle - 6) / 4) * 0.5;
+                    phaseLabel = 'ผ่อนลมหายใจออกช้าๆ';
+                }
+
+                const maxR = Math.min(w, h) * 0.25;
+                const radius = maxR * scale;
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(94, 234, 212, 0.25)';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+
+                const circleGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, radius);
+                circleGrad.addColorStop(0, '#5eead4');
+                circleGrad.addColorStop(1, 'rgba(20, 184, 166, 0.4)');
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.fillStyle = circleGrad;
+                ctx.fill();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 18px Prompt, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(phaseLabel, cx, cy + 6);
+
+            } else if (vid.type === 'stretching') {
+                // แอนิเมชันหุ่นจำลองสาธิตการยืดเหยียดแขนและเอียงตัว
+                const sway = Math.sin(videoElapsed * 2) * 0.35;
+                const armRaise = Math.abs(Math.sin(videoElapsed * 1.5)) * 1.2;
+
+                ctx.save();
+                ctx.translate(cx, cy + 30);
+                ctx.rotate(sway * 0.3);
+
+                ctx.strokeStyle = '#5eead4';
+                ctx.lineWidth = 10;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, -65);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(0, -88, 18, 0, Math.PI * 2);
+                ctx.fillStyle = '#38bdf8';
+                ctx.fill();
+
+                ctx.strokeStyle = '#99f6e4';
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.moveTo(0, -55);
+                ctx.lineTo(-45 * Math.cos(armRaise), -55 - 50 * Math.sin(armRaise));
+                ctx.moveTo(0, -55);
+                ctx.lineTo(45 * Math.cos(armRaise), -55 - 50 * Math.sin(armRaise));
+                ctx.stroke();
+
+                ctx.restore();
+
+                ctx.fillStyle = '#ccfbf1';
+                ctx.font = '600 16px Prompt, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('ยืดเหยียดกล้ามเนื้อ คอ บ่า ไหล่ ช้าๆ', cx, cy + 72);
+
+            } else if (vid.type === 'nutrition') {
+                // แอนิเมชันจัดจานอาหารสุขภาพ 2:1:1
+                const r = Math.min(w, h) * 0.23;
+
+                // จานสีขาว
+                ctx.beginPath();
+                ctx.arc(cx, cy, r + 10, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.fillStyle = '#f1f5f9';
+                ctx.fill();
+
+                // ส่วนที่ 1: ผัก 2 ส่วน (เริ่มเวลา 11 วิ)
+                if (videoElapsed >= 11) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.arc(cx, cy, r, Math.PI * 0.5, Math.PI * 1.5);
+                    ctx.closePath();
+                    ctx.fillStyle = '#34d399';
+                    ctx.fill();
+                }
+
+                // ส่วนที่ 2: ข้าว 1 ส่วน (เริ่มเวลา 22 วิ)
+                if (videoElapsed >= 22) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.arc(cx, cy, r, Math.PI * 1.5, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.fill();
+                }
+
+                // ส่วนที่ 3: โปรตีน 1 ส่วน (เริ่มเวลา 33 วิ)
+                if (videoElapsed >= 33) {
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.arc(cx, cy, r, 0, Math.PI * 0.5);
+                    ctx.closePath();
+                    ctx.fillStyle = '#fb7185';
+                    ctx.fill();
+                }
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 16px Prompt, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('สัดส่วนจานสุขภาพ 2 : 1 : 1', cx, cy + r + 32);
+            }
+        }
+
+        // Event Listeners สำหรับปุ่มควบคุมวิดีโอ
+        centerPlayBtn.addEventListener('click', startVideoPlayback);
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopVideoPlayback();
+            } else {
+                startVideoPlayback();
+            }
+        });
+        restartBtn.addEventListener('click', () => {
+            stopSpeech();
+            videoElapsed = 0;
+            lastNarratedStepIndex = -1;
+            updateVideoUI(false);
+            drawVideoFrame();
+            if (!isPlaying) {
+                startVideoPlayback();
+            } else {
+                updateVideoUI(true);
+            }
+        });
+        voiceRateSelect.addEventListener('change', (e) => {
+            speechRate = parseFloat(e.target.value) || 0.82;
+            const labelText = e.target.options[e.target.selectedIndex].text;
+            showToast(`ปรับความเร็วคนพากย์เป็น: ${labelText}`, 'info');
+            if (isPlaying && !isMuted) {
+                lastNarratedStepIndex = -1;
+                updateVideoUI(true);
+            } else if (!isMuted) {
+                voiceStatusLabel.textContent = `พร้อมบรรยายเสียง (${speechRate}x)`;
+            }
+        });
+        thaiVoiceSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val === 'auto') {
+                selectedThaiVoice = availableThaiVoices[0] || null;
+            } else {
+                selectedThaiVoice = availableThaiVoices[Number(val)] || availableThaiVoices[0] || null;
+            }
+            const chosenLabel = e.target.options[e.target.selectedIndex].text;
+            showToast(`เปลี่ยนเสียงคนพากย์เป็น: ${chosenLabel}`, 'info');
+            if (isPlaying && !isMuted) {
+                lastNarratedStepIndex = -1;
+                updateVideoUI(true);
+            }
+        });
+        testVoiceBtn.addEventListener('click', () => {
+            if (isMuted) {
+                isMuted = false;
+                muteIcon.className = 'fa-solid fa-volume-high text-mint-400';
+                muteLabel.textContent = 'เสียง: เปิด';
+            }
+            const sampleSentences = [
+                'สวัสดีครับ ยินดีต้อนรับสู่เว็บไซต์ สุขภาวะดี',
+                'นี่คือตัวอย่างเสียงคนพากย์ภาษาไทย ที่พูดช้าและชัดเจนครับ'
+            ];
+            speakThaiSentences(sampleSentences, true);
+            showToast('กำลังทดสอบเสียงคนพากย์ภาษาไทย...', 'info');
+        });
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            if (isMuted) {
+                stopSpeech();
+                muteIcon.className = 'fa-solid fa-volume-xmark text-rose-400';
+                muteLabel.textContent = 'เสียง: ปิด';
+                voiceStatusLabel.textContent = 'ปิดเสียงพากย์อยู่';
+                showToast('ปิดเสียงพากย์ภาษาไทยแล้ว', 'info');
+            } else {
+                muteIcon.className = 'fa-solid fa-volume-high text-mint-400';
+                muteLabel.textContent = 'เสียง: เปิด';
+                voiceStatusLabel.textContent = 'พร้อมบรรยายเสียงภาษาไทย (ชัดถ้อยชัดคำ)';
+                showToast('เปิดเสียงพากย์ภาษาไทยแล้ว', 'success');
+                if (isPlaying) {
+                    lastNarratedStepIndex = -1;
+                    updateVideoUI(true);
+                }
+            }
+        });
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const clickRatio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            videoElapsed = clickRatio * VIDEO_DURATION;
+            lastNarratedStepIndex = -1;
+            updateVideoUI(isPlaying);
+            drawVideoFrame();
+        });
+
+        window.addEventListener('resize', () => {
+            resizeVideoCanvas();
+            drawVideoFrame();
+        });
+
+        /**
+         * เครื่องมือคำนวณสุขภาพเบื้องต้น (Tab 4 - BMI & Water Intake)
+         */
+        document.getElementById('bmi-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const weight = parseFloat(document.getElementById('bmi-weight').value);
+            const heightCm = parseFloat(document.getElementById('bmi-height').value);
+
+            if (!weight || !heightCm || heightCm <= 0) {
+                showToast('กรุณากรอกน้ำหนักและส่วนสูงให้ถูกต้อง', 'warning');
+                return;
+            }
+
+            const heightM = heightCm / 100;
+            const bmi = weight / (heightM * heightM);
+            const bmiFixed = bmi.toFixed(2);
+
+            let status = '';
+            let badgeClass = '';
+            let advice = '';
+
+            if (bmi < 18.5) {
+                status = 'น้ำหนักน้อย / ผอม';
+                badgeClass = 'bg-sky-100 text-sky-700';
+                advice = 'คุณมีน้ำหนักต่ำกว่าเกณฑ์ ควรรับประทานอาหารให้ครบ 5 หมู่ เพิ่มโปรตีนและคาร์โบไฮเดรตที่มีประโยชน์ พร้อมออกกำลังกายเสริมสร้างกล้ามเนื้อ';
+            } else if (bmi < 23.0) {
+                status = 'ปกติ (สมส่วน)';
+                badgeClass = 'bg-emerald-100 text-emerald-700';
+                advice = 'ยินดีด้วย! น้ำหนักของคุณอยู่ในเกณฑ์มาตรฐานสุขภาพดี ควรรักษาสมดุลการทานอาหารสูตร 2:1:1 และออกกำลังกายสม่ำเสมอต่อไป';
+            } else if (bmi < 25.0) {
+                status = 'ท้วม / เริ่มเกินเกณฑ์';
+                badgeClass = 'bg-amber-100 text-amber-700';
+                advice = 'น้ำหนักเริ่มเกินเกณฑ์เล็กน้อย แนะนำให้ลดอาหารหวาน มัน เค็ม เพิ่มการทานผักผลไม้รสหวานน้อย และเดินเร็วหรือออกกำลังกายวันละ 30 นาที';
+            } else if (bmi < 30.0) {
+                status = 'อ้วนระดับ 1';
+                badgeClass = 'bg-orange-100 text-orange-700';
+                advice = 'มีความเสี่ยงต่อโรคเบาหวานและความดันโลหิตสูง ควรควบคุมปริมาณพลังงานอาหารต่อวัน หลีกเลี่ยงของทอดและน้ำหวาน และออกกำลังกายสม่ำเสมอ';
+            } else {
+                status = 'อ้วนระดับ 2 (อันตราย)';
+                badgeClass = 'bg-rose-100 text-rose-700';
+                advice = 'มีความเสี่ยงสูงต่อโรคเรื้อรัง แนะนำให้ปรึกษาแพทย์หรือนักโภชนาการเพื่อวางแผนลดน้ำหนักอย่างปลอดภัยและยั่งยืน';
+            }
+
+            document.getElementById('bmi-value').textContent = bmiFixed;
+            const badgeEl = document.getElementById('bmi-badge');
+            badgeEl.textContent = status;
+            badgeEl.className = `px-3 py-1 rounded-full text-xs font-bold ${badgeClass}`;
+            document.getElementById('bmi-advice').textContent = advice;
+            document.getElementById('bmi-result-box').classList.remove('hidden');
+
+            showToast('คำนวณค่าดัชนีมวลกาย (BMI) เรียบร้อยแล้ว', 'success');
+        });
+
+        document.getElementById('water-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const weight = parseFloat(document.getElementById('water-weight').value);
+            const extraMl = parseFloat(document.getElementById('water-activity').value);
+
+            if (!weight || weight <= 0) {
+                showToast('กรุณากรอกน้ำหนักตัวให้ถูกต้อง', 'warning');
+                return;
+            }
+
+            // สูตรมาตรฐาน: น้ำหนัก (กก.) x 33 มิลลิลิตร + น้ำชดเชยการออกกำลังกาย
+            const totalMl = (weight * 33) + extraMl;
+            const liters = (totalMl / 1000).toFixed(2);
+            const glasses = Math.round(totalMl / 250); // 1 แก้วมาตรฐาน = 250 ml
+
+            document.getElementById('water-liters').textContent = `${liters} ลิตร`;
+            document.getElementById('water-glasses').textContent = `(ประมาณ ${glasses} แก้วต่อวัน)`;
+            document.getElementById('water-result-box').classList.remove('hidden');
+
+            showToast('คำนวณปริมาณน้ำดื่มที่เหมาะสมเรียบร้อยแล้ว', 'success');
+        });
+
+        /**
+         * ระบบแจ้งเตือนแบบ Toast และระบบเข้าสู่ระบบ / จดจำรหัสผ่าน (Auth & Remember Me)
+         */
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            const styles = {
+                success: 'bg-emerald-600 text-white border-emerald-500',
+                warning: 'bg-amber-500 text-white border-amber-400',
+                error: 'bg-rose-600 text-white border-rose-500',
+                info: 'bg-slate-800 text-white border-slate-700'
+            };
+            const icons = {
+                success: 'fa-circle-check',
+                warning: 'fa-triangle-exclamation',
+                error: 'fa-circle-xmark',
+                info: 'fa-circle-info'
+            };
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-lg border text-xs sm:text-sm font-medium transition-all duration-300 ${styles[type] || styles.info}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icons[type] || icons.info} text-base shrink-0"></i>
+                <span class="flex-1 leading-snug">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-8px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function showDashboard(username) {
+            const cleanName = (username && username.trim()) ? username.trim() : 'ผู้ใช้งานทั่วไป';
+            const desktopNameEl = document.getElementById('display-username');
+            const mobileNameEl = document.getElementById('display-username-mobile');
+            if (desktopNameEl) desktopNameEl.textContent = cleanName;
+            if (mobileNameEl) mobileNameEl.textContent = cleanName;
+
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+
+            switchActiveTab('tab-selfcare');
+        }
+
+        function initAuth() {
+            const STORAGE_KEY = 'sukkhaphap_dee_saved_creds';
+            const loginForm = document.getElementById('login-form');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const rememberCheckbox = document.getElementById('remember-me');
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const eyeIcon = document.getElementById('eye-icon');
+            const demoLoginBtn = document.getElementById('demo-login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+
+            // โหลดข้อมูลที่ถูกบันทึกไว้หากติ๊ก Remember Me
+            try {
+                const rawSaved = localStorage.getItem(STORAGE_KEY);
+                if (rawSaved) {
+                    const parsed = JSON.parse(rawSaved);
+                    if (parsed && parsed.remember) {
+                        usernameInput.value = parsed.username || '';
+                        passwordInput.value = parsed.password || '';
+                        rememberCheckbox.checked = true;
+                    }
+                }
+            } catch (err) {
+                console.warn('ไม่สามารถอ่านข้อมูลที่จดจำไว้ได้:', err);
+            }
+
+            // เปิด/ปิดการแสดงรหัสผ่าน
+            if (togglePasswordBtn && passwordInput && eyeIcon) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    const isHidden = passwordInput.type === 'password';
+                    passwordInput.type = isHidden ? 'text' : 'password';
+                    eyeIcon.className = isHidden ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+                });
+            }
+
+            // ส่งฟอร์มเข้าสู่ระบบ
+            if (loginForm) {
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const userVal = usernameInput.value.trim();
+                    const passVal = passwordInput.value;
+
+                    if (!userVal || !passVal) {
+                        showToast('กรุณากรอกชื่อผู้ใช้งานและรหัสผ่านก่อนเข้าสู่ระบบ', 'warning');
+                        return;
+                    }
+
+                    try {
+                        if (rememberCheckbox.checked) {
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                                username: userVal,
+                                password: passVal,
+                                remember: true
+                            }));
+                        } else {
+                            localStorage.removeItem(STORAGE_KEY);
+                        }
+                    } catch (err) {
+                        console.warn('ไม่สามารถบันทึกข้อมูล Remember Me ได้:', err);
+                    }
+
+                    showToast(`ยินดีต้อนรับคุณ ${userVal} เข้าสู่ระบบสุขภาวะดี`, 'success');
+                    showDashboard(userVal);
+                });
+            }
+
+            // ทดลองเข้าสู่ระบบด่วน
+            if (demoLoginBtn) {
+                demoLoginBtn.addEventListener('click', () => {
+                    showToast('เข้าสู่ระบบด้วยบัญชีประชาชนทั่วไปเรียบร้อยแล้ว', 'success');
+                    showDashboard('ประชาชนทั่วไป');
+                });
+            }
+
+            // ออกจากระบบ
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    stopVideoPlayback();
+                    document.getElementById('dashboard-view').classList.add('hidden');
+                    document.getElementById('login-view').classList.remove('hidden');
+
+                    try {
+                        const rawSaved = localStorage.getItem(STORAGE_KEY);
+                        const parsed = rawSaved ? JSON.parse(rawSaved) : null;
+                        if (!parsed || !parsed.remember) {
+                            usernameInput.value = '';
+                            passwordInput.value = '';
+                            rememberCheckbox.checked = false;
+                        }
+                    } catch (err) {}
+
+                    showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
+                });
+            }
+        }
+
+        // เริ่มต้นทำงานเมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
+        window.onload = function () {
+            renderSelfCareCards('all');
+            renderFoodGroups();
+            renderVideoPlaylist();
+            selectVideo(0, false);
+            initAuth();
+        };
+    </script>
+</body>
+</html>
